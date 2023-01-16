@@ -53,7 +53,7 @@ export const Navbar = () => {
 					</Link>
 				</div>
 
-				<div className='flex items-center gap-4 offcanvas'>
+				<div className='flex items-center gap-4'>
 					<button
 						type='button'
 						className='flex hover:bg-slate-200 rounded-full p-1 transition-colors'

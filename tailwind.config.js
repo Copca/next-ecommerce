@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+	content: [
+		'./pages/**/*.{js,ts,jsx,tsx}',
+		'./components/**/*.{js,ts,jsx,tsx}',
+		'./src/**/*.{html,js}',
+		'./node_modules/tw-elements/dist/js/**/*.js'
+	],
 	theme: {
 		container: {
 			center: true,
@@ -30,5 +35,5 @@ module.exports = {
 			}
 		}
 	},
-	plugins: []
+	plugins: [require('tw-elements/dist/plugin')]
 };
