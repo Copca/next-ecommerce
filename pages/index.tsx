@@ -1,22 +1,24 @@
 import { NextPage } from 'next';
 
-import { initialData } from '../database/products';
+import { useProducts } from '../hooks/';
 
 import { ShopLayout } from '../components/layout';
 import { ProductList } from '../components/products';
-import { IProduct } from '../interfaces';
+import { Loading } from '../components/ui';
 
 const HomePage: NextPage = () => {
+	const { products, isLoading } = useProducts('/products');
+
 	return (
 		<ShopLayout
 			title={'Teslo-Shop - Home'}
-			pageDescription={'Encuentra los mejores productos de Teslo'}
+			pageDescription={'Encuentra los mejores productos de Teslo aquí'}
 		>
 			<div className='container'>
 				<h1 className='text-2xl font-bold'>Tienda</h1>
 				<h2>Todos los productos</h2>
 
-				<ProductList products={initialData.products as IProduct[]} />
+				{isLoading ? <Loading /> : <ProductList products={products} />}
 			</div>
 		</ShopLayout>
 	);

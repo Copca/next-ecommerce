@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+
 import { IProduct } from '../../interfaces';
 
 interface Props {
@@ -12,11 +13,11 @@ export const ProductCard: FC<Props> = ({ product }) => {
 
 	return (
 		<Link
-			// href={`/product/${product.slug}`}
-			href={'/product'}
-			prefetch={false} // evita cargar todas las tarjetas en memoria
+			href={`/product/${product.slug}`}
+			prefetch={false}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
+			className=' flex flex-col items-center'
 		>
 			<div className='relative'>
 				{!product.inStock && (
@@ -25,15 +26,11 @@ export const ProductCard: FC<Props> = ({ product }) => {
 					</div>
 				)}
 
-				<button data-mdb-ripple='true' className='flex justify-center'>
+				<button data-mdb-ripple='true' className='relative'>
 					<Image
-						src={
-							isHovered
-								? `/products/${product.images[0]}`
-								: `/products/${product.images[1]}`
-						}
-						width={350}
-						height={350}
+						src={isHovered ? product.images[0] : product.images[1]}
+						width={300}
+						height={300}
 						alt={`imagen ${product.title}`}
 						priority
 						className={`rounded-md shadow ${
@@ -42,7 +39,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
 					/>
 				</button>
 
-				<div className='mt-2 px-4'>
+				<div className='text-left px-4'>
 					<h6>{product.title}</h6>
 					<p>$ {product.price}</p>
 				</div>

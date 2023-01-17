@@ -17,8 +17,6 @@ export const SideMenu = () => {
 	const router = useRouter();
 	const { isOpenMenu, closeMenu } = useContext(UiContext);
 
-	console.log(isOpenMenu);
-
 	return (
 		<div>
 			<div
