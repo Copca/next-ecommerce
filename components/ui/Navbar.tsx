@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { BiCart, BiSearchAlt2 } from 'react-icons/bi';
 
 import { UiContext } from '../../context/ui';
+import { InputSearch } from './InputSearch';
 
 export const Navbar = () => {
 	const router = useRouter();
-	const { openMenu } = useContext(UiContext);
+	const { isInputSearchOpen, openMenu, openInputSearch } = useContext(UiContext);
 
 	return (
 		<div className='shadow mb-8'>
@@ -26,6 +27,8 @@ export const Navbar = () => {
 								? 'bg-slate-700 text-white'
 								: 'text-slate-800'
 						}`}
+						data-mdb-ripple='true'
+						data-mdb-ripple-color='light'
 					>
 						Hombres
 					</Link>
@@ -37,6 +40,8 @@ export const Navbar = () => {
 								? 'bg-slate-700 text-white'
 								: 'text-slate-800'
 						}`}
+						data-mdb-ripple='true'
+						data-mdb-ripple-color='light'
 					>
 						Mujeres
 					</Link>
@@ -48,18 +53,39 @@ export const Navbar = () => {
 								? 'bg-slate-700 text-white'
 								: 'text-slate-800'
 						}`}
+						data-mdb-ripple='true'
+						data-mdb-ripple-color='light'
 					>
 						Niños
 					</Link>
 				</div>
 
 				<div className='flex items-center gap-4'>
+					{/* Pantallas pequeñas */}
 					<button
 						type='button'
-						className='flex hover:bg-slate-200 rounded-full p-1 transition-colors'
+						className='sm:hidden hover:bg-slate-200 rounded-full p-1 transition-colors'
+						data-mdb-ripple='true'
+						data-mdb-ripple-color='dark'
+						onClick={openMenu}
 					>
 						<BiSearchAlt2 className='text-2xl' />
 					</button>
+
+					{/* Pantallas grandes */}
+					{isInputSearchOpen ? (
+						<InputSearch icon='close' className='hidden sm:flex' />
+					) : (
+						<button
+							type='button'
+							className='hidden sm:flex hover:bg-slate-200 rounded-full p-1 transition-colors'
+							data-mdb-ripple='true'
+							data-mdb-ripple-color='dark'
+							onClick={openInputSearch}
+						>
+							<BiSearchAlt2 className='text-2xl' />
+						</button>
+					)}
 
 					<Link href={'/cart'}>
 						<div className='relative w-fit'>

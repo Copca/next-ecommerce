@@ -4,10 +4,12 @@ import { UiContext, uiReducer } from './';
 
 export interface UiState {
 	isOpenMenu: boolean;
+	isInputSearchOpen: boolean;
 }
 
 const UI_INITIAL_STATE: UiState = {
-	isOpenMenu: false
+	isOpenMenu: false,
+	isInputSearchOpen: false
 };
 
 export const UiProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -21,6 +23,14 @@ export const UiProvider: FC<PropsWithChildren> = ({ children }) => {
 		dispatch({ type: '[Ui] - Close Menu' });
 	};
 
+	const openInputSearch = () => {
+		dispatch({ type: '[Ui] - Open InputSearch' });
+	};
+
+	const closeInputSearch = () => {
+		dispatch({ type: '[Ui] - Close InputSearch' });
+	};
+
 	return (
 		<UiContext.Provider
 			value={{
@@ -29,7 +39,9 @@ export const UiProvider: FC<PropsWithChildren> = ({ children }) => {
 
 				// Metodos
 				openMenu,
-				closeMenu
+				closeMenu,
+				openInputSearch,
+				closeInputSearch
 			}}
 		>
 			{children}

@@ -12,6 +12,7 @@ import { MdOutlineDashboard } from 'react-icons/md';
 import { GiClothes } from 'react-icons/gi';
 
 import { UiContext } from '../../context/ui/';
+import { InputSearch } from './InputSearch';
 
 export const SideMenu = () => {
 	const router = useRouter();
@@ -40,6 +41,10 @@ export const SideMenu = () => {
 			>
 				<div className='text-white p-4'>
 					<FiX className='cursor-pointer' onClick={closeMenu} />
+				</div>
+
+				<div className='mt-4 p-8'>
+					<InputSearch icon='search' color='light' />
 				</div>
 
 				<nav className='text-white p-8'>

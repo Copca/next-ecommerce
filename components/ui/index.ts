@@ -4,7 +4,7 @@ export * from './ContInputAnim';
 export * from './ContSelect';
 export * from './Counter';
 // export * from './InputAnimated';
-// export * from './InputSearch';
+export * from './InputSearch';
 export * from './Loading';
 export * from './Navbar';
 export * from './SideMenu';
