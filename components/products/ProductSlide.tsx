@@ -35,8 +35,7 @@ export const ProductSlide: FC<Props> = ({ images }) => {
 						} `}
 					>
 						<Image
-							// src={img}
-							src={`/products/${img}`}
+							src={img}
 							width={800}
 							height={800}
 							priority

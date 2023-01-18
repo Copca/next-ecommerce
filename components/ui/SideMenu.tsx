@@ -17,6 +17,11 @@ export const SideMenu = () => {
 	const router = useRouter();
 	const { isOpenMenu, closeMenu } = useContext(UiContext);
 
+	const navigateTo = (url: string) => {
+		closeMenu();
+		router.push(url);
+	};
+
 	return (
 		<div>
 			<div
@@ -37,49 +42,46 @@ export const SideMenu = () => {
 					<FiX className='cursor-pointer' onClick={closeMenu} />
 				</div>
 
-				<div className='text-white p-8'>
-					<nav className='space-y-6'>
-						<Link
-							href='#'
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-						>
+				<nav className='text-white p-8'>
+					<ul className='space-y-6'>
+						<li className='flex items-center gap-2 hover:text-slate-300 transition-colors'>
 							<BiUserCircle className='text-2xl' />
 							Perfil
-						</Link>
+						</li>
 
-						<Link
-							href={'/orders/history'}
+						<li
+							// href={'/orders/history'}
 							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
 						>
 							<TiTicket className='text-2xl' />
 							Mis ordenes
-						</Link>
+						</li>
 
 						{/* Solo visible en pantallas chicas */}
 						<div className='space-y-6 lg:hidden'>
-							<Link
-								href='/category/men'
-								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							<li
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
+								onClick={() => navigateTo('/category/men')}
 							>
 								<AiOutlineMan className='text-2xl' />
 								Hombres
-							</Link>
+							</li>
 
-							<Link
-								href='/category/women'
-								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							<li
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
+								onClick={() => navigateTo('/category/women')}
 							>
 								<AiOutlineWoman className='text-2xl' />
 								Mujeres
-							</Link>
+							</li>
 
-							<Link
-								href='/category/kids'
-								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							<li
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
+								onClick={() => navigateTo('/category/kids')}
 							>
 								<FaChild className='text-2xl' />
 								Niños
-							</Link>
+							</li>
 						</div>
 
 						<button
@@ -90,14 +92,14 @@ export const SideMenu = () => {
 							Salir
 						</button>
 
-						<Link
-							href={`/auth/login?p=${router.asPath}`}
+						<li
+							// href={`/auth/login?p=${router.asPath}`}
 							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
 						>
 							<BiLogIn className='text-2xl' />
 							Login
-						</Link>
-					</nav>
+						</li>
+					</ul>
 
 					{/* Admin Panel */}
 					<nav className='space-y-4 border-t border-t-slate-400 mt-8'>
@@ -135,7 +137,7 @@ export const SideMenu = () => {
 							Usuarios
 						</Link>
 					</nav>
-				</div>
+				</nav>
 			</aside>
 		</div>
 	);
