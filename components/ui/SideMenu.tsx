@@ -17,7 +17,7 @@ import { InputSearch } from './InputSearch';
 
 export const SideMenu = () => {
 	const router = useRouter();
-	const { logout } = useContext(AuthContext);
+	const { isLoggedIn, user, logout } = useContext(AuthContext);
 	const { isOpenMenu, closeMenu } = useContext(UiContext);
 
 	const navigateTo = (url: string) => {
@@ -30,7 +30,7 @@ export const SideMenu = () => {
 			<div
 				className={`${
 					isOpenMenu
-						? 'bg-slate-300/20 backdrop-blur-sm fixed top-0 left-0 right-0 min-h-screen w-full z-10'
+						? 'bg-slate-300/20 backdrop-blur-sm fixed top-0 left-0 right-0 min-h-screen w-full z-20'
 						: 'hidden'
 				}`}
 				onClick={closeMenu}
@@ -51,18 +51,22 @@ export const SideMenu = () => {
 
 				<nav className='text-white p-8'>
 					<ul className='space-y-6'>
-						<li className='flex items-center gap-2 hover:text-slate-300 transition-colors'>
-							<BiUserCircle className='text-2xl' />
-							Perfil
-						</li>
+						{isLoggedIn && (
+							<>
+								<li className='flex items-center gap-2 hover:text-slate-300 transition-colors'>
+									<BiUserCircle className='text-2xl' />
+									Perfil
+								</li>
 
-						<li
-							// href={'/orders/history'}
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-						>
-							<TiTicket className='text-2xl' />
-							Mis ordenes
-						</li>
+								<li
+									// href={'/orders/history'}
+									className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+								>
+									<TiTicket className='text-2xl' />
+									Mis ordenes
+								</li>
+							</>
+						)}
 
 						{/* Solo visible en pantallas chicas */}
 						<div className='space-y-6 lg:hidden'>
@@ -91,61 +95,65 @@ export const SideMenu = () => {
 							</li>
 						</div>
 
-						<button
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-							onClick={logout}
-						>
-							<BiExit className='text-2xl' />
-							Salir
-						</button>
-
-						<button
-							// href={`/auth/login?p=${router.asPath}`}
-
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-							onClick={() => navigateTo(`/auth/login`)}
-						>
-							<BiLogIn className='text-2xl' />
-							Login
-						</button>
+						{isLoggedIn ? (
+							<button
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+								onClick={logout}
+							>
+								<BiExit className='text-2xl' />
+								Salir
+							</button>
+						) : (
+							<button
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+								onClick={() =>
+									navigateTo(`/auth/login?p=${router.asPath}`)
+								}
+							>
+								<BiLogIn className='text-2xl' />
+								Login
+							</button>
+						)}
 					</ul>
 
 					{/* Admin Panel */}
-					<nav className='space-y-4 border-t border-t-slate-400 mt-8'>
-						<h6 className='text-xl mt-4'>Admin Panel</h6>
+					{user?.role === 'admin' && (
+						<nav className='space-y-4 border-t border-t-slate-400 mt-8'>
+							<h6 className='text-xl mt-4'>Admin Panel</h6>
 
-						<Link
-							href='/admin'
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-						>
-							<MdOutlineDashboard className='text-2xl' />
-							Dashboard
-						</Link>
+							<Link
+								href='/admin'
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							>
+								<MdOutlineDashboard className='text-2xl' />
+								Dashboard
+							</Link>
 
-						<Link
-							href='/admin/products'
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-						>
-							<GiClothes className='text-2xl' />
-							Productos
-						</Link>
+							<Link
+								href='/admin/products'
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							>
+								<GiClothes className='text-2xl' />
+								Productos
+							</Link>
 
-						<Link
-							href='/admin/orders'
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-						>
-							<TiTicket className='text-2xl' />
-							Ordenes
-						</Link>
+							<Link
+								href='/admin/orders'
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							>
+								<TiTicket className='text-2xl' />
+								Ordenes
+							</Link>
 
-						<Link
-							href='/admin/users'
-							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-						>
-							<FaUsers className='text-2xl' />
-							Usuarios
-						</Link>
-					</nav>
+							<Link
+								href='/admin/users'
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							>
+								<FaUsers className='text-2xl' />
+								Usuarios
+							</Link>
+						</nav>
+					)}
 				</nav>
 			</aside>
 		</div>
