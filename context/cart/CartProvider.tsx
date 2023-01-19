@@ -106,7 +106,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 		dispatch({ type: '[Cart] - Update order summary', payload: orderSummary });
 	}, [state.cart]);
 
-	//* Agregar productos al carrito
+	// Agregar productos al carrito
 	const addProduct = (product: ICartProduct) => {
 		// Solo agrega el producto si el ID aún no esta en el carrito
 		const productInCart = state.cart.some(
@@ -150,12 +150,12 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 		dispatch({ type: '[Cart] - Update Products in Cart', payload: updatedProducts });
 	};
 
-	//* Cambiar cantidades del producto
+	// Cambiar cantidades del producto
 	const updateCartQuantity = (product: ICartProduct) => {
 		dispatch({ type: '[Cart] - Change Cart quantity', payload: product });
 	};
 
-	//* Quitar productos del carrito
+	// Quitar productos del carrito
 	const removeCartProduct = (product: ICartProduct) => {
 		dispatch({ type: '[Cart] - Remove product in cart', payload: product });
 	};
