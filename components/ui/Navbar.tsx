@@ -4,8 +4,9 @@ import Link from 'next/link';
 
 import { BiCart, BiSearchAlt2 } from 'react-icons/bi';
 
-import { UiContext } from '../../context/ui';
+import { UiContext } from '../../context';
 import { InputSearch } from './InputSearch';
+import { CartBtn } from './CartBtn';
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -88,13 +89,7 @@ export const Navbar = () => {
 					)}
 
 					<Link href={'/cart'}>
-						<div className='relative w-fit'>
-							<div className='absolute inline-block translate-x-1/2 -translate-y-1/2 text-xs text-center font-bold bg-blue-500 text-white rounded-full p-1.5 z-auto min-w-full'>
-								+9
-							</div>
-
-							<BiCart className='text-2xl' />
-						</div>
+						<CartBtn />
 					</Link>
 
 					<button type='button' className='ml-2' onClick={openMenu}>

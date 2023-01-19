@@ -1,17 +1,11 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { IOrderItem } from '../../interfaces';
-import { initialData } from '../../database/products';
+import { ICartProduct, IOrderItem } from '../../interfaces';
+import { CartContext } from '../../context/cart/CartContext';
 
 import { Counter } from '../ui';
-
-const productsInCart = [
-	initialData.products[0],
-	initialData.products[1],
-	initialData.products[2]
-];
 
 interface Props {
 	editable?: boolean;
@@ -19,20 +13,26 @@ interface Props {
 }
 
 export const CartList: FC<Props> = ({ editable = false, products }) => {
-	const onUpdatedQuantity = () => {};
+	const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
+
+	const onUpdatedQuantity = (newQuantity: number, product: ICartProduct) => {
+		product.quantity = newQuantity;
+
+		updateCartQuantity(product);
+	};
 
 	return (
 		<>
-			{productsInCart.map((product) => (
+			{cart.map((product) => (
 				<div
-					key={product.slug + product.sizes}
+					key={product.slug + product.size}
 					className='flex flex-col items-center md:flex-row md:items-start gap-4 mb-4'
 				>
 					<div>
 						{/* TODO: Llevar a la página del prouducto */}
 						<Link href={`/product/${product.slug}`}>
 							<Image
-								src={`/products/${product.images[0]}`}
+								src={product.image}
 								alt={product.title}
 								width={200}
 								height={200}
@@ -50,20 +50,22 @@ export const CartList: FC<Props> = ({ editable = false, products }) => {
 
 							<p>
 								Talla:
-								<span className='font-bold ml-3'>{product.sizes[0]}</span>
+								<span className='font-bold ml-3'>{product.size}</span>
 							</p>
 
 							{editable ? (
 								<Counter
-									currentValue={0}
+									currentValue={product.quantity}
 									maxValue={10}
-									// updatedQuantity={(value) =>
-									// 	onUpdatedQuantity(product as ICartProduct, value)
-									// }
-									updatedQuantity={onUpdatedQuantity}
+									updatedQuantity={(value) =>
+										onUpdatedQuantity(value, product)
+									}
 								/>
 							) : (
-								<p className='text-xl mt-4'>3 Productos</p>
+								<p className='text-xl mt-4'>
+									{product.quantity}{' '}
+									{product.quantity > 1 ? 'Productos' : 'Producto'}
+								</p>
 							)}
 						</div>
 					</div>
@@ -74,9 +76,7 @@ export const CartList: FC<Props> = ({ editable = false, products }) => {
 						{editable && (
 							<button
 								className='text-blue-500 hover:text-blue-600 font-bold text-sm transition-colors'
-								// onClick={() =>
-								// 	removeCartProduct(product as ICartProduct)
-								// }
+								onClick={() => removeCartProduct(product as ICartProduct)}
 							>
 								Remover
 							</button>

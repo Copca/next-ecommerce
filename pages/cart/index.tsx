@@ -6,21 +6,22 @@ import { useContext, useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
-// import { CartContext } from '../../context';
+import { CartContext } from '../../context';
+
 import { ShopLayout } from '../../components/layout';
 import { CartList, CartOrderSumary } from '../../components/cart';
 
 const CartPage: NextPage = () => {
 	const router = useRouter();
-	// const { isLoaded, cart } = useContext(CartContext);
+	const { isLoaded, cart } = useContext(CartContext);
 
-	// useEffect(() => {
-	// 	if (isLoaded && cart.length === 0) {
-	// 		router.replace('/cart/empty');
-	// 	}
-	// }, [isLoaded, cart, router]);
+	useEffect(() => {
+		if (isLoaded && cart.length === 0) {
+			router.replace('/cart/empty');
+		}
+	}, [isLoaded, cart, router]);
 
-	// if (!isLoaded || cart.length === 0) return <></>;
+	if (!isLoaded || cart.length === 0) return <></>;
 
 	return (
 		<ShopLayout title={'Carrito'} pageDescription={'Carrito de compras de la tienda'}>

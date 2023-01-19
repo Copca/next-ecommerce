@@ -1,32 +1,61 @@
-import { useState } from 'react';
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+/**
+ * Esta página dinámica podriamos hidratarla con Client-Side-Renderig usando SWR o una peticion Fetch con useEffect 	pero perderiamos información para el SEO.
+ * Por lo tanto sería mejor el Server Side Rendering - SSR el inconveniente es que se genera la página en cada petición
+ * La mejor opción es generarla (estaticamente) con SSG Static Site Generation con ISR (reavalidate) usando GetStaticPaths y GetStaticProps
+ *
+ * Esta página se genera estaticamente en buid time si es reqierida en produccion se gera con ISR(revalidate) cada 24hrs, evitando que se genere dinamicamente con cada request(petición)
+ *
+ */
 
-import { initialData } from '../../database/products';
+import { useState, useContext } from 'react';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
+
 import { dbProducts } from '../../database';
-import { IProduct, ISize } from '../../interfaces';
+import { ICartProduct, IProduct, ISize } from '../../interfaces';
 
 import { ShopLayout } from '../../components/layout';
 import { ProductSlide, SizeSelector } from '../../components/products';
 import { Counter } from '../../components/ui';
-
-const product = initialData.products[0];
+import { CartContext } from '../../context';
 
 interface Props {
 	product: IProduct;
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
-	const [quantity, setQuantity] = useState(0);
+	const router = useRouter();
+	const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+		_id: product._id,
+		image: product.images[0],
+		price: product.price,
+		size: undefined,
+		slug: product.slug,
+		title: product.title,
+		gender: product.gender,
+		quantity: 1
+	});
+	const { addProduct } = useContext(CartContext);
 
-	const onUpdatedQuantity = (quantity: number) => {
-		setQuantity(quantity);
+	const onUpdatedQuantity = (newQuantity: number) => {
+		setTempCartProduct({
+			...tempCartProduct,
+			quantity: newQuantity
+		});
 	};
 
-	const onSelectedSize = (size: ISize) => {
-		// setTempCartProduct({
-		// 	...tempCartProduct,
-		// 	size
-		// });
+	const onSelectSize = (selectedSize: ISize) => {
+		setTempCartProduct({
+			...tempCartProduct,
+			size: selectedSize
+		});
+	};
+
+	const onAddProduct = () => {
+		if (!tempCartProduct.size) return;
+
+		addProduct(tempCartProduct);
+		router.push('/cart');
 	};
 
 	return (
@@ -41,26 +70,24 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 					<p className='text-xl mb-8'>$ {product.price}</p>
 
 					<Counter
-						// currentValue={tempCartProduct.quantity}
-						currentValue={quantity}
-						updatedQuantity={onUpdatedQuantity}
+						currentValue={tempCartProduct.quantity}
 						maxValue={product.inStock > 10 ? 10 : product.inStock}
+						updatedQuantity={onUpdatedQuantity}
 					/>
 
 					<SizeSelector
 						sizes={product.sizes}
-						// selectedSize={tempCartProduct.size}
-						selectedSize={product.sizes[0]}
-						onSelectedSize={onSelectedSize}
+						selectedSize={tempCartProduct.size}
+						selectSize={onSelectSize}
 					/>
 
 					{product.inStock ? (
 						<button
 							className='btn bg-blue-500 hover:bg-blue-600 w-full my-4 rounded-full'
 							data-mdb-ripple='true'
-							// onClick={onAddProduct}
+							onClick={onAddProduct}
 						>
-							{product.sizes
+							{tempCartProduct.size
 								? 'Agregar al carrito'
 								: 'Seleccione una talla'}
 						</button>

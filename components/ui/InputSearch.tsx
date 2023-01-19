@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import { BiSearch, BiX } from 'react-icons/bi';
 
-import { UiContext } from '../../context/ui/';
+import { UiContext } from '../../context';
 
 interface Props {
 	className?: string;

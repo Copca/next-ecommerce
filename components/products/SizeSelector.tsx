@@ -1,22 +1,23 @@
-import { ISize } from '../../interfaces/product';
 import { FC } from 'react';
 
+import { ISize } from '../../interfaces';
+
 interface Props {
-	selectedSize?: ISize;
 	sizes: ISize[];
+	selectedSize?: ISize;
 	// Métodos
-	onSelectedSize: (size: ISize) => void;
+	selectSize: (size: ISize) => void;
 }
 
-export const SizeSelector: FC<Props> = ({ selectedSize, sizes, onSelectedSize }) => {
+export const SizeSelector: FC<Props> = ({ sizes, selectedSize, selectSize }) => {
 	return (
 		<div className='flex justify-start space-x-4'>
 			{sizes.map((size) => (
 				<button
 					key={size}
 					className={`hover:bg-slate-200 p-1 rounded w-16
-						${selectedSize === size ? 'bg-slate-800 text-white px-2 py-0.5 rounded' : 'font-bold'}`}
-					onClick={() => onSelectedSize(size)}
+						${size === selectedSize ? 'bg-slate-800 text-white px-2 py-0.5 rounded' : 'font-bold'}`}
+					onClick={() => selectSize(size)}
 				>
 					{size}
 				</button>

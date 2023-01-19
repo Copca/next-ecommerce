@@ -11,7 +11,7 @@ import { FaChild, FaUsers } from 'react-icons/fa';
 import { MdOutlineDashboard } from 'react-icons/md';
 import { GiClothes } from 'react-icons/gi';
 
-import { UiContext } from '../../context/ui/';
+import { UiContext } from '../../context';
 import { InputSearch } from './InputSearch';
 
 export const SideMenu = () => {
