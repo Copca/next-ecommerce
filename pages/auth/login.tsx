@@ -2,7 +2,7 @@
  * Restringimos la entrada a la página con SSR (getServerSideProps), si esta logeado
  */
 
-import { useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -31,6 +31,17 @@ const LoginPage: NextPage = () => {
 		formState: { errors }
 	} = useForm<FormData>();
 	const [isShowError, setIsShowError] = useState(false);
+	const [providers, setProviders] = useState<any>({});
+
+	useEffect(() => {
+		const obtnerProvider = async () => {
+			const prov = await getProviders();
+			// console.log(prov);
+			setProviders(prov);
+		};
+
+		obtnerProvider();
+	}, []);
 
 	const onLoginUser = async ({ email, password }: FormData) => {
 		setIsShowError(false);
@@ -111,15 +122,26 @@ const LoginPage: NextPage = () => {
 
 						<hr className='my-4' />
 
-						<div className='flex justify-center'>
-							<button
-								className='btn text-gray-800 hover:bg-gray-100 border border-gray-500 gap-2 w-full mt-8'
-								data-mdb-ripple='true'
-								data-mdb-ripple-color='dark'
-								// onClick={(e) => onLoginProvider(e, providers.github.id)}
-							>
-								<AiFillGithub className='text-lg' /> GitHub
-							</button>
+						<div className='flex flex-col'>
+							{Object.values(providers).map((provider: any) => {
+								if (provider.id === 'credentials') return null;
+
+								return (
+									<button
+										type='button'
+										key={provider.id}
+										className='btn text-gray-800 hover:bg-gray-100 border border-gray-500 gap-2 w-full mt-8'
+										data-mdb-ripple='true'
+										data-mdb-ripple-color='dark'
+										onClick={() => signIn(provider.id)}
+									>
+										{provider.id === 'github' && (
+											<AiFillGithub className='text-lg' />
+										)}
+										{provider.name}
+									</button>
+								);
+							})}
 						</div>
 					</form>
 				</div>
