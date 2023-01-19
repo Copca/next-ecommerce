@@ -118,10 +118,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 		}
 	}; */
 
-	/* 	const logout = () => {
-		Cookies.remove('token');
+	// Cerrar Sesión
+	const logout = () => {
 		Cookies.remove('cart');
-
 		Cookies.remove('firstName');
 		Cookies.remove('lastName');
 		Cookies.remove('address');
@@ -133,21 +132,18 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
 		// Función de NextAuth para cerrar Sesión
 		signOut();
-
-		// Para autenticación personalizada refresh borra todo el state de la aplicación
-		// router.reload();
-	}; */
+	};
 
 	return (
 		<AuthContext.Provider
 			value={{
 				// State
-				...state
+				...state,
 
 				// Metodos
 				// loginUser,
 				// registerUser,
-				// logout
+				logout
 			}}
 		>
 			{children}

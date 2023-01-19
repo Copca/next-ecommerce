@@ -11,11 +11,13 @@ import { FaChild, FaUsers } from 'react-icons/fa';
 import { MdOutlineDashboard } from 'react-icons/md';
 import { GiClothes } from 'react-icons/gi';
 
-import { UiContext } from '../../context';
+import { AuthContext, UiContext } from '../../context';
+
 import { InputSearch } from './InputSearch';
 
 export const SideMenu = () => {
 	const router = useRouter();
+	const { logout } = useContext(AuthContext);
 	const { isOpenMenu, closeMenu } = useContext(UiContext);
 
 	const navigateTo = (url: string) => {
@@ -91,19 +93,21 @@ export const SideMenu = () => {
 
 						<button
 							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
-							// onClick={logout}
+							onClick={logout}
 						>
 							<BiExit className='text-2xl' />
 							Salir
 						</button>
 
-						<li
+						<button
 							// href={`/auth/login?p=${router.asPath}`}
+
 							className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							onClick={() => navigateTo(`/auth/login`)}
 						>
 							<BiLogIn className='text-2xl' />
 							Login
-						</li>
+						</button>
 					</ul>
 
 					{/* Admin Panel */}
