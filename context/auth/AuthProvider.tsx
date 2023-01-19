@@ -30,7 +30,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 		if (status === 'authenticated') {
 			console.log({ user: data.user });
 			// Guardamos en Context la información de usuario almacenada en session
-			// dispatch({ type: '[Auth] - Login', payload: data.user as IUser });
+			dispatch({ type: '[Auth] - Login', payload: data.user as IUser });
 		}
 	}, [status, data]);
 
