@@ -1,29 +1,37 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 
-import axios from 'axios';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
-import { IUser } from '../../interfaces';
 import clienteAxios from '../../axios/axios';
+import { IUser } from '../../interfaces';
 
 import { AuthContext, authReducer } from './';
 
 export interface AuthState {
 	isLoggedIn: boolean;
 	user?: IUser;
+	responseMessage: {
+		isShowMessage: boolean;
+		hasError: boolean;
+		message: string;
+	};
 }
 
 const AUTH_INITIAL_STATE: AuthState = {
 	isLoggedIn: false,
-	user: undefined
+	user: undefined,
+	responseMessage: {
+		isShowMessage: false,
+		hasError: false,
+		message: ''
+	}
 };
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 	const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 	const { data, status } = useSession();
-
-	// const router = useRouter();
 
 	// Autenticación con NextAuth
 	useEffect(() => {
@@ -34,89 +42,37 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 		}
 	}, [status, data]);
 
-	/**
-	 * Se sustituye con NextAuth
-	 * 
-	 * 
-	 
-	 // Mantenemos persistencia en la autenticación personalizada
-	 // useEffect(() => {
-	 // 	checkToken();
-	 // }, []);
-	 
-	// Mantenemos persistencia en la autenticación
-	const checkToken = async () => {
-		if (!Cookies.get('token')) return;
-
-		try {
-			const { data } = await clienteAxios.get('/user/validate-token');
-			const { token, user } = data;
-
-			// Guardamos el token en Cookies
-			Cookies.set('token', token);
-			dispatch({ type: '[Auth] - Login', payload: user });
-		} catch (error) {
-			Cookies.remove('token');
-		}
-	};
-	*/
-
-	/*
-	// Login Personalizado se sustituye por NextAuth
-	const loginUser = async (email: string, password: string): Promise<boolean> => {
-		try {
-			const { data } = await clienteAxios.post('/user/login', { email, password });
-			const { token, user } = data;
-
-			// Guardamos el token en Cookies
-			Cookies.set('token', token);
-			dispatch({ type: '[Auth] - Login', payload: user });
-
-			return true;
-		} catch (error) {
-			return false;
-		}
-	};
-	*/
-
-	/* const registerUser = async (
-		name: string,
-		email: string,
-		password: string
-	): Promise<{ hasError: boolean; message?: string }> => {
-		// tipado en linea, lo ideal es hacer la interfaz
-
+	// Registrar nuevo usuario en DB
+	const registerUser = async (name: string, email: string, password: string) => {
 		try {
 			const { data } = await clienteAxios.post('/user/register', {
 				name,
 				email,
 				password
 			});
-			const { token, user } = data;
 
-			// Guardamos el token en Cookies
-			Cookies.set('token', token);
-			dispatch({ type: '[Auth] - Login', payload: user });
-
-			return {
-				hasError: false
-			};
+			dispatch({
+				type: '[Auth] - Response',
+				payload: { isShowMessage: true, hasError: false, message: data.message }
+			});
 		} catch (error) {
-			console.log(error);
-
+			// console.log(error);
 			if (axios.isAxiosError(error)) {
-				return {
-					hasError: true,
-					message: error.response?.data
-				};
+				dispatch({
+					type: '[Auth] - Response',
+					payload: {
+						isShowMessage: true,
+						hasError: true,
+						message: error.response?.data.message
+					}
+				});
 			}
-
-			return {
-				hasError: true,
-				message: 'No se puedo crear el usuario, intente de nuevo'
-			};
+		} finally {
+			setTimeout(() => {
+				dispatch({ type: '[Auth] - Reset Response Message' });
+			}, 3000);
 		}
-	}; */
+	};
 
 	// Cerrar Sesión
 	const logout = () => {
@@ -141,8 +97,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 				...state,
 
 				// Metodos
-				// loginUser,
-				// registerUser,
+				registerUser,
 				logout
 			}}
 		>

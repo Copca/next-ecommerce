@@ -1,16 +1,20 @@
 /**
  * Restringimos la entrada a la página con SSR (getServerSideProps), si esta logeado
  */
-
-import { useState } from 'react';
+import { useContext } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
+import { unstable_getServerSession } from 'next-auth/next';
+import { signIn } from 'next-auth/react';
+import { authOptions } from '../api/auth/[...nextauth]';
+
 import { AiFillGithub } from 'react-icons/ai';
 
 import { validation } from '../../utils';
+import { AuthContext } from '../../context';
 
 import { AuthLayout } from '../../components/layout';
 
@@ -22,16 +26,20 @@ interface FormData {
 
 const RegisterPage: NextPage = () => {
 	const router = useRouter();
+	const { responseMessage } = useContext(AuthContext);
+	const { registerUser } = useContext(AuthContext);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
 	} = useForm<FormData>();
-	const [isShowError, setIsShowError] = useState(false);
-	const [errorMessage, setErrorMessage] = useState('');
 
 	const onRegisterUser = async ({ name, email, password }: FormData) => {
-		console.log({ name, email, password });
+		await registerUser(name, email, password);
+
+		setTimeout(async () => {
+			await signIn('credentials', { email, password });
+		}, 2500);
 	};
 
 	return (
@@ -40,13 +48,17 @@ const RegisterPage: NextPage = () => {
 				<div className='max-w-lg mx-auto bg-white border shadow rounded-md p-8'>
 					<h1 className='text-2xl font-bold mb-8'>Crear cuenta</h1>
 
-					{isShowError && (
-						<div className='bg-red-500 text-white text-center text-sm rounded-full py-1.5 mb-8 w-4/5 mx-auto'>
-							Este usuario ya esta registrado
+					{responseMessage.isShowMessage && (
+						<div
+							className={` text-white text-center text-sm rounded-full py-1.5 mb-8 w-4/5 mx-auto animate-fadeIn ${
+								responseMessage.hasError ? 'bg-red-500' : 'bg-emerald-500'
+							}`}
+						>
+							{responseMessage.message}
 						</div>
 					)}
 
-					<form onSubmit={handleSubmit(onRegisterUser)}>
+					<form onSubmit={handleSubmit(onRegisterUser)} noValidate>
 						<div className={`relative mb-4`}>
 							<input
 								type='text'
@@ -140,21 +152,23 @@ const RegisterPage: NextPage = () => {
 
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
-// export const getServerSideProps: GetServerSideProps = async ({ req, res, query }) => {
-// 	const session = await unstable_getServerSession(req, res, authOptions);
-// 	const { p = '/' } = query;
+export const getServerSideProps: GetServerSideProps = async ({ req, res, query }) => {
+	const session = await unstable_getServerSession(req, res, authOptions);
+	const { p = '/' } = query;
 
-// 	// Si tenemos session redireccionamos a '/' o a la última página visitada '?/category/men'
-// 	if (session) {
-// 		return {
-// 			redirect: {
-// 				destination: `${p}`,
-// 				permanent: false
-// 			}
-// 		};
-// 	}
+	// Si tenemos session redireccionamos a '/' o a la última página visitada '?/category/men'
+	if (session) {
+		return {
+			redirect: {
+				destination: `${p}`,
+				permanent: false
+			}
+		};
+	}
 
-// 	return {
-// 		props: {}
-// 	};
+	return {
+		props: {}
+	};
+};
+
 export default RegisterPage;

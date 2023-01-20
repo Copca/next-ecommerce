@@ -6,17 +6,14 @@ interface ContextProps {
 	// State
 	isLoggedIn: boolean;
 	user?: IUser;
+	responseMessage: {
+		isShowMessage: boolean;
+		hasError: boolean;
+		message: string;
+	};
 
 	// Metodos
-	// loginUser: (email: string, password: string) => Promise<boolean>;
-	// registerUser: (
-	// 	name: string,
-	// 	email: string,
-	// 	password: string
-	// ) => Promise<{
-	// 	hasError: boolean;
-	// 	message?: string;
-	// }>;
+	registerUser: (name: string, email: string, password: string) => Promise<void>;
 	logout: () => void;
 }
 
