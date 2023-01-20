@@ -1,52 +1,108 @@
+/**
+ * Componente usado en:
+ * "/checkout/summary" '<CheckoutSummary/>' -> <CardSummary editable shippingAddress={shippingAddress} />
+ */
+
+import { FC, useContext } from 'react';
 import Link from 'next/link';
 
-export const CardSummary = () => {
+import { countries, divisa } from '../../utils';
+import { IOrder, IShippingAddress } from '../../interfaces';
+
+import { CartContext } from '../../context/cart/CartContext';
+
+interface Props {
+	editable?: boolean;
+	orderValues?: IOrder;
+	shippingAddress?: IShippingAddress; // información del state.cart
+}
+
+export const CardSummary: FC<Props> = ({
+	editable = false,
+	orderValues,
+	shippingAddress
+}) => {
+	const { numberOfItems, subTotal, tax, total } = useContext(CartContext);
+
+	/**
+	 * Seleccionamos el origen de la información dependiendo donde usamos el componente
+	 * "/checkout/summary", componente
+	 */
+
+	// Seleccionamos de donde usamos los valores de las cookies(/checkout/summary) o de la DB
+	const shippingAddressValues = orderValues?.shippingAddress
+		? orderValues.shippingAddress
+		: shippingAddress;
+
+	const summaryValues = orderValues
+		? orderValues
+		: { numberOfItems, subTotal, tax, total };
+
+	if (!shippingAddressValues) return <></>;
+
 	return (
 		<>
-			<h2 className='text-xl'>3 Productos</h2>
+			<h2 className='text-xl'>
+				Resumen: ({summaryValues.numberOfItems}){' '}
+				{summaryValues.numberOfItems === 1 ? 'Producto' : 'Productos'}
+			</h2>
 			<hr className='mb-8' />
 
 			<div className='flex justify-between mb-2'>
 				<h6 className='text-lg font-bold'>Dirección de entrega</h6>
 
-				<Link href={'#'} className='underline'>
-					Editar
-				</Link>
+				{editable && (
+					<Link href={'#'} className='underline'>
+						Editar
+					</Link>
+				)}
 			</div>
 
-			<p>Ernesto Copca</p>
-			<p>Cerrada 27 No.39</p>
-			<p>CDMX</p>
-			<p>01430</p>
-			<p>México</p>
-			<p>5539394870</p>
+			<p>
+				{shippingAddressValues?.firstName} {shippingAddressValues?.lastName}
+			</p>
+			<p>
+				{shippingAddressValues.address}{' '}
+				{shippingAddressValues.address2
+					? `, ${shippingAddressValues.address2}`
+					: ''}
+			</p>
+			<p>{shippingAddressValues.city}</p>
+			<p>{shippingAddressValues.zip}</p>
+			<p>{countries.find((c) => c.code === shippingAddressValues.country)?.name}</p>
+			<p>{shippingAddressValues.phone}</p>
 
 			<hr />
 
-			<div className='flex justify-end mt-8'>
-				<Link href={'#'} className='underline'>
-					Editar
-				</Link>
-			</div>
+			{editable && (
+				<div className='flex justify-end mt-8'>
+					<Link href={'#'} className='underline'>
+						Editar
+					</Link>
+				</div>
+			)}
 
 			<div className='flex justify-between mt-2'>
 				<p>No. Productos</p>
-				<p>2 Productos</p>
+				<p>
+					{summaryValues.numberOfItems}{' '}
+					{summaryValues.numberOfItems === 1 ? 'Producto' : 'Productos'}{' '}
+				</p>
 			</div>
 
 			<div className='flex justify-between'>
 				<p>Subtotal</p>
-				<p>$ 100</p>
+				<p>{divisa.formatearDinero(summaryValues.subTotal)}</p>
 			</div>
 
 			<div className='flex justify-between'>
-				<p>Impuestos 15%</p>
-				<p>$15</p>
+				<p>Impuestos {Number(process.env.NEXT_PUBLIC_TAX_RATE) * 100}%</p>
+				<p>{divisa.formatearDinero(summaryValues.tax)}</p>
 			</div>
 
 			<div className='flex justify-between text-lg font-bold mt-3 mb-8'>
 				<p>Total:</p>
-				<p>$ 115</p>
+				<p>{divisa.formatearDinero(summaryValues.total)}</p>
 			</div>
 		</>
 	);

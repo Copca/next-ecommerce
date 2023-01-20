@@ -1,3 +1,9 @@
+/**
+ * Componente usado en:
+ * "/cart" -> <CartList editable />
+ * "/checkout/summary" -> <CartList />
+ */
+
 import { FC, useContext } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,6 +26,9 @@ export const CartList: FC<Props> = ({ editable = false, products }) => {
 
 		updateCartQuantity(product);
 	};
+
+	// Mestra los productos del state.cart o los de la DB order
+	// const productsToShow = products ? products : cart;
 
 	return (
 		<>

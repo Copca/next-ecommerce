@@ -61,23 +61,23 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 		}
 	}, [state.cart, isMounted]);
 
-	// ? Guardamos en el State los datos de ShippingAddress almacenados en Cookies
-	// useEffect(() => {
-	// 	if (Cookies.get('firstName')) {
-	// 		const address = {
-	// 			firstName: Cookies.get('firstName') ?? '',
-	// 			lastName: Cookies.get('lastName') ?? '',
-	// 			address: Cookies.get('address') ?? '',
-	// 			address2: Cookies.get('address2') ?? '',
-	// 			zip: Cookies.get('zip') ?? '',
-	// 			city: Cookies.get('city') ?? '',
-	// 			country: Cookies.get('country') ?? '',
-	// 			phone: Cookies.get('phone') ?? ''
-	// 		};
+	//  Guardamos en el State los datos de ShippingAddress almacenados en Cookies cuando se recarga el componente
+	useEffect(() => {
+		if (Cookies.get('firstName')) {
+			const address = {
+				firstName: Cookies.get('firstName') ?? '',
+				lastName: Cookies.get('lastName') ?? '',
+				address: Cookies.get('address') ?? '',
+				address2: Cookies.get('address2') ?? '',
+				zip: Cookies.get('zip') ?? '',
+				city: Cookies.get('city') ?? '',
+				country: Cookies.get('country') ?? '',
+				phone: Cookies.get('phone') ?? ''
+			};
 
-	// 		dispatch({ type: '[Cart] - Load Address from Cookies', payload: address });
-	// 	}
-	// }, []);
+			dispatch({ type: '[Cart] - Load Address from Cookies', payload: address });
+		}
+	}, []);
 
 	// Calular el total de articulos en carrito y subtotal del costo
 	useEffect(() => {
