@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import Cookies from 'js-cookie';
 
 import { countries } from '../../utils/countries';
 
@@ -19,6 +20,19 @@ type FormData = {
 	phone: string;
 };
 
+const getAddresFromCookies = (): FormData => {
+	return {
+		firstName: Cookies.get('firstName') ?? '',
+		lastName: Cookies.get('lastName') ?? '',
+		address: Cookies.get('address') ?? '',
+		address2: Cookies.get('address2') ?? '',
+		zip: Cookies.get('zip') ?? '',
+		city: Cookies.get('city') ?? '',
+		country: Cookies.get('country') ?? '',
+		phone: Cookies.get('phone') ?? ''
+	};
+};
+
 export const FormAddress = () => {
 	const router = useRouter();
 	const { updateShippingAddress } = useContext(CartContext);
@@ -27,7 +41,7 @@ export const FormAddress = () => {
 		handleSubmit,
 		formState: { errors }
 	} = useForm<FormData>({
-		// defaultValues: getAddresFromCookies()
+		defaultValues: getAddresFromCookies()
 	});
 
 	const onSubmitAddress = async (data: FormData) => {
