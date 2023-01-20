@@ -1,40 +1,73 @@
-import { ContInputAnim, ContSelect } from '../ui';
+import { useContext } from 'react';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+
 import { countries } from '../../utils/countries';
 
+import { CartContext } from '../../context/cart/CartContext';
+
+import { ContInputAnim, ContSelect } from '../ui';
+
+type FormData = {
+	firstName: string;
+	lastName: string;
+	address: string;
+	address2: string;
+	zip: string;
+	city: string;
+	country: string;
+	phone: string;
+};
+
 export const FormAddress = () => {
+	const router = useRouter();
+	const { updateShippingAddress } = useContext(CartContext);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors }
+	} = useForm<FormData>({
+		// defaultValues: getAddresFromCookies()
+	});
+
+	const onSubmitAddress = async (data: FormData) => {
+		updateShippingAddress(data);
+		router.push('/checkout/summary');
+	};
+
 	return (
-		<form>
+		<form onSubmit={handleSubmit(onSubmitAddress)}>
 			<div className='max-w-5xl grid md:grid-cols-2 gap-3 mx-auto'>
-				<ContInputAnim label='Nombre' message={''}>
+				<ContInputAnim label='Nombre' message={errors.firstName?.message}>
 					<input
 						type='text'
 						placeholder=' '
 						className='w-full bg-transparent border border-transparent focus:border-transparent outline-none py-1 px-3 peer'
-						// {...register('firstName', {
-						// 	required: 'Este campo es obligatorio'
-						// })}
+						{...register('firstName', {
+							required: 'Este campo es obligatorio'
+						})}
 					/>
 				</ContInputAnim>
 
-				<ContInputAnim label='Apellido'>
+				<ContInputAnim label='Apellido' message={errors.lastName?.message}>
 					<input
 						type='text'
 						placeholder=' '
 						className='w-full bg-transparent border border-transparent focus:border-transparent outline-none py-1 px-3 peer'
-						// {...register('lastName', {
-						// 	required: 'Este campo es obligatorio'
-						// })}
+						{...register('lastName', {
+							required: 'Este campo es obligatorio'
+						})}
 					/>
 				</ContInputAnim>
 
-				<ContInputAnim label='Dirección'>
+				<ContInputAnim label='Dirección' message={errors.address?.message}>
 					<input
 						type='text'
 						placeholder=' '
 						className='w-full bg-transparent border border-transparent focus:border-transparent outline-none py-1 px-3 peer'
-						// {...register('address', {
-						// 	required: 'Este campo es obligatorio'
-						// })}
+						{...register('address', {
+							required: 'Este campo es obligatorio'
+						})}
 					/>
 				</ContInputAnim>
 
@@ -43,38 +76,38 @@ export const FormAddress = () => {
 						type='text'
 						placeholder=' '
 						className='w-full bg-transparent border border-transparent focus:border-transparent outline-none py-1 px-3 peer'
-						// {...register('address2')}
+						{...register('address2')}
 					/>
 				</ContInputAnim>
 
-				<ContInputAnim label='Código Postal'>
+				<ContInputAnim label='Código Postal' message={errors.zip?.message}>
 					<input
 						type='text'
 						placeholder=' '
 						className='w-full bg-transparent border border-transparent focus:border-transparent outline-none py-1 px-3 peer'
-						// {...register('zip', {
-						// 	required: 'Este campo es obligatorio'
-						// })}
+						{...register('zip', {
+							required: 'Este campo es obligatorio'
+						})}
 					/>
 				</ContInputAnim>
 
-				<ContInputAnim label='Ciudad'>
+				<ContInputAnim label='Ciudad' message={errors.city?.message}>
 					<input
 						type='text'
 						placeholder=' '
 						className='w-full bg-transparent border border-transparent focus:border-transparent outline-none py-1 px-3 peer'
-						// {...register('city', {
-						// 	required: 'Este campo es obligatorio'
-						// })}
+						{...register('city', {
+							required: 'Este campo es obligatorio'
+						})}
 					/>
 				</ContInputAnim>
 
-				<ContSelect>
+				<ContSelect message={errors.country?.message}>
 					<select
 						className='outline-none bg-transparent w-full mt-4 py-2 mb-1 mx-8 peer'
-						// {...register('country', {
-						// 	required: 'Este campo es obligatorio'
-						// })}
+						{...register('country', {
+							required: 'Este campo es obligatorio'
+						})}
 					>
 						<option value=''> - Selecciona un Pais - </option>
 						{countries.map((country) => (
@@ -90,7 +123,7 @@ export const FormAddress = () => {
 						type='text'
 						placeholder=' '
 						className='w-full bg-transparent border border-transparent focus:border-transparent outline-none py-1 px-3 peer'
-						// {...register('phone')}
+						{...register('phone')}
 					/>
 				</ContInputAnim>
 			</div>

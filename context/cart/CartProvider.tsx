@@ -160,7 +160,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 		dispatch({ type: '[Cart] - Remove product in cart', payload: product });
 	};
 
-	//? Revisar
+	// Guardamos la direccion de envio en Cookies y en el State
 	const updateShippingAddress = (address: IShippingAddress) => {
 		Cookies.set('firstName', address.firstName);
 		Cookies.set('lastName', address.lastName);
