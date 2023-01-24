@@ -1,5 +1,12 @@
+import { FC } from 'react';
+import { GetServerSideProps } from 'next';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
 import Link from 'next/link';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+
+import { dbOrders } from '../../database';
+import { IOrder } from '../../interfaces/order';
 
 import { ShopLayout } from '../../components/layout';
 import { Chip } from '../../components/ui';
@@ -7,7 +14,7 @@ import { Chip } from '../../components/ui';
 // Creación de las columnas del DataGrid
 const columns: GridColDef[] = [
 	{ field: 'id', headerName: 'ID', width: 100 },
-	{ field: 'nombre', headerName: 'Nombre Completo', width: 300 },
+	{ field: 'name', headerName: 'Nombre Completo', width: 300 },
 	{
 		field: 'paid',
 		headerName: 'Pagada',
@@ -18,10 +25,11 @@ const columns: GridColDef[] = [
 		}
 	},
 	{
-		field: 'orden',
+		field: 'order',
 		headerName: 'Orden',
 		width: 200,
 		renderCell: (params) => {
+			// console.log(params);
 			return (
 				<Link href={`/orders/${params.row.orderId}`} className='underline'>
 					Ver Orden
@@ -33,12 +41,23 @@ const columns: GridColDef[] = [
 ];
 
 // Forma statica de crear las filas del DataGrid
-const rows = [
-	{ id: 1, nombre: 'Ernesto Copca', paid: true, orderId: '638e5e9b807702b134875a41' },
-	{ id: 2, nombre: 'Mónica Moreno', paid: false, orderId: '638e5e9b807702b134875b87' }
-];
+// const rows = [
+// 	{ id: 1, nombre: 'Ernesto Copca', paid: true, orderId: '638e5e9b807702b134875a41' },
+// 	{ id: 2, nombre: 'Mónica Moreno', paid: false, orderId: '638e5e9b807702b134875b87' }
+// ];
 
-const PageHistory = () => {
+interface Props {
+	orders: IOrder[];
+}
+
+const PageHistory: FC<Props> = ({ orders }) => {
+	const rows = orders.map((order, index) => ({
+		id: index + 1,
+		name: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+		paid: order.isPaid,
+		orderId: order._id
+	}));
+
 	return (
 		<ShopLayout
 			title={'Historial de ordenes'}
@@ -58,6 +77,29 @@ const PageHistory = () => {
 			</div>
 		</ShopLayout>
 	);
+};
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+	const session = await unstable_getServerSession(req, res, authOptions);
+
+	if (!session) {
+		return {
+			redirect: {
+				destination: '/auth/login?p=/orders/history',
+				permanent: false
+			}
+		};
+	}
+
+	const orders = await dbOrders.getOrdersByUser(session.user?._id!);
+
+	return {
+		props: {
+			orders
+		}
+	};
 };
 
 export default PageHistory;
