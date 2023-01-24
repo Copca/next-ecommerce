@@ -2,10 +2,10 @@ import { FC, PropsWithChildren, useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+import { clienteAxios } from '../../axios';
 import { ICartProduct, IOrder, IShippingAddress } from '../../interfaces';
 
 import { CartContext, cartReducer } from './';
-import { clienteAxios } from '../../axios';
 
 export interface CartState {
 	isLoaded: boolean;
@@ -79,7 +79,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 		}
 	}, []);
 
-	// Calular el total de articulos en carrito y subtotal del costo
+	// Calular el total de articulos en carrito y subtotal del costo para el resumen de la orden
 	useEffect(() => {
 		// Cantidad de articulos
 		const numberOfItems = state.cart.reduce(
@@ -175,13 +175,18 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 	};
 
 	//? Revisar
-	const createOrder = async (): Promise<{ hasError: boolean; message: string }> => {
+	const createOrder = async (): Promise<{
+		hasError: boolean;
+		message: string;
+		idOrder?: string;
+	}> => {
 		if (!state.shippingAddress) {
 			throw new Error('No hay dirección de entrega');
 		}
 
+		// Almacenamos en "body": IOrder los datos obligatorios de CartState
 		const body: IOrder = {
-			// hacemos este map por que size es obligatorio state.cart:ICartProdict[] y en IOrder es opcional
+			// hacemos este map por que size es obligatorio en IOrder y es opcional en el state.cart:ICartProduct[]l
 			orderItems: state.cart.map((p) => ({
 				...p,
 				size: p.size!
@@ -200,12 +205,14 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 			// Reseteamos el cart(cookies)
 			dispatch({ type: '[Cart] - Order Complete' });
 
-			// Si todo sale bien regreso en message el _id de la orden
 			return {
 				hasError: false,
-				message: data._id!
+				message: 'Order creada',
+				idOrder: data._id
 			};
 		} catch (error) {
+			// console.log(error);
+
 			if (axios.isAxiosError(error)) {
 				return {
 					hasError: true,

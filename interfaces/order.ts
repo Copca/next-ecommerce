@@ -22,13 +22,13 @@ export interface IOrder {
 
 export interface IOrderItem {
 	_id: string;
-	title: string;
-	size: ISize;
-	quantity: number;
-	slug: string;
+	gender: string;
 	image: string;
 	price: number;
-	gender: string;
+	quantity: number;
+	size: ISize;
+	slug: string;
+	title: string;
 }
 
 export interface IShippingAddress {
