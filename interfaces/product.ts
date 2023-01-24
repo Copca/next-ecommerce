@@ -1,6 +1,7 @@
 export interface IProduct {
 	_id: string;
 	description: string;
+	gender: 'men' | 'women' | 'kid' | 'unisex';
 	images: string[];
 	inStock: number;
 	price: number;
@@ -9,7 +10,6 @@ export interface IProduct {
 	tags: string[];
 	title: string;
 	type: ITypes;
-	gender: 'men' | 'women' | 'kid' | 'unisex';
 
 	// Campos creados por MongoDB
 	createdAt: string;

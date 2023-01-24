@@ -60,7 +60,8 @@ export const SideMenu = () => {
 
 								<li
 									// href={'/orders/history'}
-									className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+									className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
+									onClick={() => navigateTo('/orders/history')}
 								>
 									<TiTicket className='text-2xl' />
 									Mis ordenes

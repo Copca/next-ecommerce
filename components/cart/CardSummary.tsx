@@ -1,6 +1,10 @@
 /**
  * Componente usado en:
+ *
  * "/checkout/summary" '<CheckoutSummary/>' -> <CardSummary editable shippingAddress={shippingAddress} />
+ *
+ * "/orders/[id]" '<OrderSummary' -> <CardSummary orderValues={order} />
+ *
  */
 
 import { FC, useContext } from 'react';
@@ -13,8 +17,8 @@ import { CartContext } from '../../context/cart/CartContext';
 
 interface Props {
 	editable?: boolean;
-	orderValues?: IOrder;
 	shippingAddress?: IShippingAddress; // información del state.cart
+	orderValues?: IOrder;
 }
 
 export const CardSummary: FC<Props> = ({
@@ -26,10 +30,8 @@ export const CardSummary: FC<Props> = ({
 
 	/**
 	 * Seleccionamos el origen de la información dependiendo donde usamos el componente
-	 * "/checkout/summary", componente
+	 * "/checkout/summary"(carrito) ó "/orders/[id]" (orden desde DB)
 	 */
-
-	// Seleccionamos de donde usamos los valores de las cookies(/checkout/summary) o de la DB
 	const shippingAddressValues = orderValues?.shippingAddress
 		? orderValues.shippingAddress
 		: shippingAddress;

@@ -2,6 +2,7 @@
  * Componente usado en:
  * "/cart" -> <CartList editable />
  * "/checkout/summary" -> <CartList />
+ * "/orders/[id]" -> <CartList productsDB={order.orderItems} />
  */
 
 import { FC, useContext } from 'react';
@@ -15,10 +16,10 @@ import { Counter } from '../ui';
 
 interface Props {
 	editable?: boolean;
-	products?: IOrderItem[];
+	productsDB?: IOrderItem[];
 }
 
-export const CartList: FC<Props> = ({ editable = false, products }) => {
+export const CartList: FC<Props> = ({ editable = false, productsDB }) => {
 	const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
 
 	const onUpdatedQuantity = (newQuantity: number, product: ICartProduct) => {
@@ -28,11 +29,11 @@ export const CartList: FC<Props> = ({ editable = false, products }) => {
 	};
 
 	// Mestra los productos del state.cart o los de la DB order
-	// const productsToShow = products ? products : cart;
+	const productsToShow = productsDB ? productsDB : cart;
 
 	return (
 		<>
-			{cart.map((product) => (
+			{productsToShow.map((product) => (
 				<div
 					key={product.slug + product.size}
 					className='flex flex-col items-center md:flex-row md:items-start gap-4 mb-4'
@@ -67,7 +68,7 @@ export const CartList: FC<Props> = ({ editable = false, products }) => {
 									currentValue={product.quantity}
 									maxValue={10}
 									updatedQuantity={(value) =>
-										onUpdatedQuantity(value, product)
+										onUpdatedQuantity(value, product as ICartProduct)
 									}
 								/>
 							) : (
