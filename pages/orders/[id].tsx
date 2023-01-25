@@ -20,7 +20,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
 	return (
 		<ShopLayout title={'Resumen de orden'} pageDescription={'Resumen de la orden'}>
 			<div className='container animate-fadeIn'>
-				<h1 className='text-2xl mb-8'>Orden {order._id}</h1>
+				<h1 className='text-2xl mb-8'>Orden: {order._id}</h1>
 
 				<Chip pagado={order.isPaid} className='mb-4' />
 
