@@ -8,7 +8,7 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 
-import { ShopLayout } from '../../components/layout';
+import { ShopLayout } from '../../components/layouts';
 import { CartList, OrderSummary } from '../../components/cart';
 import { Chip } from '../../components/ui';
 

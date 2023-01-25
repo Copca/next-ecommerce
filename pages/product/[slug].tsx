@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { dbProducts } from '../../database';
 import { ICartProduct, IProduct, ISize } from '../../interfaces';
 
-import { ShopLayout } from '../../components/layout';
+import { ShopLayout } from '../../components/layouts';
 import { ProductSlide, SizeSelector } from '../../components/products';
 import { Counter } from '../../components/ui';
 import { CartContext } from '../../context';

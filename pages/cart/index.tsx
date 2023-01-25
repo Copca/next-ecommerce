@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 import { CartContext } from '../../context';
 
-import { ShopLayout } from '../../components/layout';
+import { ShopLayout } from '../../components/layouts';
 import { CartList, CartOrderSumary } from '../../components/cart';
 
 const CartPage: NextPage = () => {

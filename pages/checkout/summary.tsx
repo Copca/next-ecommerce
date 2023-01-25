@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Cookies from 'js-cookie';
 
 import { useRouter } from 'next/router';
-import { ShopLayout } from '../../components/layout';
+import { ShopLayout } from '../../components/layouts';
 
 import { CartList, CheckoutSummary } from '../../components/cart';
 

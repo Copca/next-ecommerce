@@ -16,7 +16,7 @@ import { AiFillGithub } from 'react-icons/ai';
 
 import { validation } from '../../utils';
 
-import { AuthLayout } from '../../components/layout';
+import { AuthLayout } from '../../components/layouts';
 
 type FormData = {
 	email: string;

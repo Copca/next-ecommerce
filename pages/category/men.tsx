@@ -6,7 +6,7 @@ import { NextPage } from 'next';
 
 import { useProducts } from '../../hooks/';
 
-import { ShopLayout } from '../../components/layout';
+import { ShopLayout } from '../../components/layouts';
 import { ProductList } from '../../components/products';
 import { Loading } from '../../components/ui';
 

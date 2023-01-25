@@ -59,7 +59,6 @@ export const SideMenu = () => {
 								</li>
 
 								<li
-									// href={'/orders/history'}
 									className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
 									onClick={() => navigateTo('/orders/history')}
 								>
@@ -70,7 +69,7 @@ export const SideMenu = () => {
 						)}
 
 						{/* Solo visible en pantallas chicas */}
-						<div className='space-y-6 lg:hidden'>
+						<ul className='space-y-6 lg:hidden'>
 							<li
 								className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
 								onClick={() => navigateTo('/category/men')}
@@ -94,7 +93,7 @@ export const SideMenu = () => {
 								<FaChild className='text-2xl' />
 								Niños
 							</li>
-						</div>
+						</ul>
 
 						{isLoggedIn ? (
 							<button
@@ -119,41 +118,41 @@ export const SideMenu = () => {
 
 					{/* Admin Panel */}
 					{user?.role === 'admin' && (
-						<nav className='space-y-4 border-t border-t-slate-400 mt-8'>
+						<ul className='space-y-4 border-t border-t-slate-400 mt-8'>
 							<h6 className='text-xl mt-4'>Admin Panel</h6>
 
-							<Link
-								href='/admin'
-								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+							<li
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
+								onClick={() => navigateTo('/admin')}
 							>
 								<MdOutlineDashboard className='text-2xl' />
 								Dashboard
-							</Link>
+							</li>
 
-							<Link
-								href='/admin/products'
+							<li
+								// href='/admin/products'
 								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
 							>
 								<GiClothes className='text-2xl' />
 								Productos
-							</Link>
+							</li>
 
-							<Link
-								href='/admin/orders'
+							<li
+								// href='/admin/orders'
 								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
 							>
 								<TiTicket className='text-2xl' />
 								Ordenes
-							</Link>
+							</li>
 
-							<Link
-								href='/admin/users'
+							<li
+								// href='/admin/users'
 								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
 							>
 								<FaUsers className='text-2xl' />
 								Usuarios
-							</Link>
-						</nav>
+							</li>
+						</ul>
 					)}
 				</nav>
 			</aside>

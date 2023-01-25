@@ -8,7 +8,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces/order';
 
-import { ShopLayout } from '../../components/layout';
+import { ShopLayout } from '../../components/layouts';
 import { Chip } from '../../components/ui';
 
 // Creación de las columnas del DataGrid

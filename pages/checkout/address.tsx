@@ -4,7 +4,7 @@
 
 import { NextPage } from 'next';
 
-import { ShopLayout } from '../../components/layout';
+import { ShopLayout } from '../../components/layouts';
 import { FormAddress } from '../../components/cart';
 
 const AddressPage: NextPage = () => {

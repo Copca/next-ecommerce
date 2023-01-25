@@ -16,7 +16,7 @@ import { AiFillGithub } from 'react-icons/ai';
 import { validation } from '../../utils';
 import { AuthContext } from '../../context';
 
-import { AuthLayout } from '../../components/layout';
+import { AuthLayout } from '../../components/layouts';
 
 interface FormData {
 	name: string;
