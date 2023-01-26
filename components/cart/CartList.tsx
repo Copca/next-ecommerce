@@ -3,6 +3,7 @@
  * "/cart" -> <CartList editable />
  * "/checkout/summary" -> <CartList />
  * "/orders/[id]" -> <CartList productsDB={order.orderItems} />
+ * "/admin/orders/[id]" -> <CartList productsDB={order.orderItems} />
  */
 
 import { FC, useContext } from 'react';

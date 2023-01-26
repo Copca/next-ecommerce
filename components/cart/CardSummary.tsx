@@ -2,8 +2,8 @@
  * Componente usado en:
  *
  * "/checkout/summary" '<CheckoutSummary/>' -> <CardSummary editable shippingAddress={shippingAddress} />
- *
  * "/orders/[id]" '<OrderSummary' -> <CardSummary orderValues={order} />
+ * "/admin/orders/[id]" '<AdminOrderSummary order={order} />' -> <CardSummary orderValues={order} />
  *
  */
 
