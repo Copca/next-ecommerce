@@ -131,7 +131,8 @@ export const SideMenu = () => {
 
 							<li
 								// href='/admin/products'
-								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
+								onClick={() => navigateTo('/admin/products')}
 							>
 								<GiClothes className='text-2xl' />
 								Productos
