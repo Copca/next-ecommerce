@@ -10,6 +10,14 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(req: NextRequest) {
 	const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
+	// Proteccion de los endpoints de la /api/admin
+	if (req.nextUrl.pathname.startsWith('/api/admin') && !session) {
+		return new NextResponse(
+			JSON.stringify({ success: false, message: 'No autorizado' }),
+			{ status: 401, headers: { 'content-type': 'application/json' } }
+		);
+	}
+
 	if (!session) {
 		const requestedPage = req.nextUrl.pathname;
 		const url = req.nextUrl.clone();
@@ -20,12 +28,18 @@ export async function middleware(req: NextRequest) {
 		return NextResponse.redirect(url);
 	}
 
+	const validRoles = ['admin', 'super-user', 'seo'];
+
+	if (!validRoles.includes(session.user.role)) {
+		return NextResponse.redirect(new URL('/', req.nextUrl.origin));
+	}
+
 	// return NextResponse.redirect(new URL('/about-2', req.url));
 	return NextResponse.next();
 }
 
 export const config = {
-	matcher: ['/checkout/address', '/checkout/summary']
+	matcher: ['/checkout/:path*', '/admin:path*', '/api/admin/:function*']
 };
 
 /**

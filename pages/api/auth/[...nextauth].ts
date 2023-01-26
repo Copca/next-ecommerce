@@ -54,11 +54,11 @@ export const authOptions: NextAuthOptions = {
 			// En user tendremos la información enviado en authorize(credentials) => user = {_id, email, role, name }
 			// Agregamos propiedades al token
 			if (account) {
-				token.accessToken = account.access_token;
+				token.accessToken = account.access_token!;
 
 				switch (account.type) {
 					case 'credentials':
-						token.user = user;
+						token.user = user!;
 						break;
 
 					case 'oauth':
@@ -76,8 +76,8 @@ export const authOptions: NextAuthOptions = {
 		},
 		async session({ session, token, user }) {
 			// Cabiamos la información por default de session.user por token.user = {_id, email, role, name }
-			session.accessToken = token.accessToken as string;
-			session.user = token.user as any;
+			session.accessToken = token.accessToken;
+			session.user = token.user;
 
 			return session; // Información accesible desde el FronEnd
 		}
