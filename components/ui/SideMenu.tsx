@@ -146,8 +146,8 @@ export const SideMenu = () => {
 							</li>
 
 							<li
-								// href='/admin/users'
-								className='flex items-center gap-2 hover:text-slate-300 transition-colors'
+								className='flex items-center gap-2 hover:text-slate-300 transition-colors cursor-pointer'
+								onClick={() => navigateTo('/admin/users')}
 							>
 								<FaUsers className='text-2xl' />
 								Usuarios
