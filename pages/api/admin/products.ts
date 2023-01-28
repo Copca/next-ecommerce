@@ -72,8 +72,6 @@ const updatedProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =
 			return res.status(400).json({ message });
 		}
 
-		// TODO: cambiar la URL localhost:3000/productos/imagen.jpg
-
 		await db.connect();
 		const product = await Product.findById(_id);
 
@@ -84,22 +82,38 @@ const updatedProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =
 		}
 
 		// Eliminar las imagenes Cloudinary
-		// https://res.cloudinary.com/dfgalpmit/image/upload/v1671569619/dapgamcftmcpvqrcivhv.webp
+		//url ej: https://res.cloudinary.com/dfgalpmit/image/upload/v1671569619/dapgamcftmcpvqrcivhv.webp
+		// Recorremos las imagenes del producto en la DB
 		product.images.forEach(async (img) => {
-			if (!images.includes(img)) {
+			if (img.includes('cloudinary') && !images.includes(img)) {
 				// Extraemos de cloudinary_url el public_id
-
 				const [fileId, extension] = img
 					.substring(img.lastIndexOf('/') + 1)
 					.split('.');
 
-				console.log({ img, fileId, extension });
+				// console.log({ img, fileId, extension });
+				console.log('eiminiar:', fileId);
 
 				await cloudinary.uploader.destroy(fileId);
 			}
 		});
 
-		await product.update(req.body); // No regresa el producto actualizado, se debe recargar el FrontEnd
+		// Guardamos unicamente el nombre del archivo local quitando HOST_NAME el http://3000 en fileSystem
+		const updateImages = images.map((img) => {
+			if (img.includes(`${process.env.HOST_NAME}`)) {
+				const arrImg = img.split('/');
+				const imgLocal = arrImg[arrImg.length - 1];
+
+				return imgLocal;
+			}
+
+			return img;
+		});
+
+		// Si la imagen es local le quitamos el http://..
+		req.body.images = updateImages;
+
+		await product.updateOne(req.body);
 		await db.disconnect();
 
 		return res.status(200).json(product);
